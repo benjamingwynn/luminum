@@ -35,8 +35,12 @@ public class LuminumOutput {
 		input.handleInput("generic");
 	}
 	
-	void friendlyOut(String output_text) {
+	public void friendlyOut(String output_text) {
 		System.out.println(output_text);
+	}
+	
+	public void systemOut(String output_text) {
+		System.out.println("** SYSTEM ** > " + output_text);
 	}
 	
 }

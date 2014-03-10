@@ -1,0 +1,10 @@
+# Testing AI for Luminum
+# Unfortunately there is no way for us to detect blank lines from this file. Please do not use blank lines.
+#
+& ai_name Testing AI
+& ai_version 0.1
+$ Welcome to the Testing AI for Luminum
+$ Work-in-progress. Insert standard disclaimer here.
+G Hello
+G Hey
+G Ahoy!
