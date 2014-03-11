@@ -8,24 +8,39 @@ import java.util.Random;
 
 public class LuminumAI {
 	
-	// Add Array Lists and integers:
+	// Add Array Lists, arrays and integers:
 	public static ArrayList question = new ArrayList();
 	public static ArrayList greeting = new ArrayList();
 	
 	public static int question_count;
 	public static int greeting_count;
 	
+	public static String[][] q_usr_ans;
+	public static String[][] q_ai_resp;
+
+	public static int subline_count;
+	public static int question_number;
+	
 	public void loadAIScript(String script) throws IOException {
 		try {
-			// Initial variables?
+			// Initial variables
 			question_count = 0;
 			greeting_count = 0;
+
+			subline_count = 0;
+			question_number = 0;
+			
+			String[][] q_usr_ans = new String[999][999]; ; // TODO: define accurate max size for these arrays
+			String[][] q_ai_resp = new String[999][999];
 			
 			// Set path
 			String path = "ai/" + script + ".txt";
 			
 			// Read script
 			String[] lines = readFile(path);
+			
+			// Set up boolean
+			boolean expect_subline = false;
 			
 			// Do stuff with these lines
 			int i;
@@ -40,6 +55,19 @@ public class LuminumAI {
 				// If the first character is ! then
 				if (lines[i].startsWith("#")) {
 					// # - File comment, ignore this.
+				} else if (lines[i].startsWith("L")) {
+					// L - sub line (expanded information from previous line)
+					if (expect_subline) {
+						// Expected the sub line prefix
+						String text = lines[i].substring(2, lines[i].length());
+						q_usr_ans[question_count][subline_count] = (text.substring(0,(lines[i].indexOf(':') - 2)));
+						q_ai_resp[question_count][subline_count] = text.substring(lines[i].indexOf(':'),text.length());
+						subline_count++;
+					} else {
+						// Didn't expect the sub line
+						new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". Didn't expect 'L' prefix.");
+						subline_count = 0;
+					}
 				} else if (lines[i].startsWith("&")) {
 					// & - Meta data
 					String metatype = "ai_name";
@@ -56,6 +84,7 @@ public class LuminumAI {
 				} else if (lines[i].startsWith("?")) {
 					// ? - Asks the user a question, expects an answer.
 					question.add(lines[i].substring(2, lines[i].length()));
+					expect_subline = true;
 					question_count++;
 				} else if (lines[i].startsWith("@")) {
 					// @ - Unhappy response.
@@ -68,31 +97,22 @@ public class LuminumAI {
 					greeting.add(lines[i].substring(2, lines[i].length()));
 					greeting_count++;
 				} else {
-					new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No prefix given.");
+					new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No known prefix given.");
 				}
 			}
 		} catch (IOException e) {
 			new LuminumOutput().systemOut("Cannot access AI script. Maybe it doesn't exist? (Java IOException)");
 		}
 	}
-	
-	public void nextMessage() {
-		int sent_message_count = 0;
-		
-		if ( sent_message_count == 0 ) {
-			// The first message should be a greeting.
-			new LuminumAI().AIMessage("greeting");
-		}
-		
-		sent_message_count++;
-	}
 
 	public void AIMessage(String type) {
 		//new LuminumOutput().systemOut("AI Message");
-		LuminumOutput out = new LuminumOutput();
 		
 		if (type == "greeting") {
-			out.friendlyOut(String.valueOf(greeting.get(new Random().nextInt(greeting_count))));
+			LuminumOutput.friendlyOut(String.valueOf(greeting.get(new Random().nextInt(greeting_count))));
+		} else if (type == "question") {
+			question_number = new Random().nextInt(question_count);
+			LuminumOutput.friendlyOut(String.valueOf(question.get(question_number)));
 		}
 	}
 	
@@ -130,6 +150,8 @@ public class LuminumAI {
 		
 		return numberOfLines;
 	}
+	
+	// Old code
 	
 	void AIInput(String input) {
 		if (AIKeywordCheck("how", input) && AIKeywordCheck("you", input) && AIKeywordCheck("feeling", input)) {
@@ -179,9 +201,11 @@ public class LuminumAI {
 	
 	void AIProcess(String type) {
 		if ( type == "respond_unknown_accusation" || type == "dont_know_question" || type == "greeting" || type == "status" || type == "unknown" || type == "cant_do_that" || type == "maybe_you_can" || type == "dont_know") {
-			new LuminumOutput().friendlyOut(new LuminumMessageGen().randomMessage(type));
+			new LuminumOutput();
+			LuminumOutput.friendlyOut(new LuminumMessageGen().randomMessage(type));
 		} else {
-			new LuminumOutput().friendlyOut(new LuminumMessageGen().message(type));
+			new LuminumOutput();
+			LuminumOutput.friendlyOut(new LuminumMessageGen().message(type));
 		}
 		if ( type == "joke_chicken_understand" ) {
 			new LuminumInput().handleInput("laugh");

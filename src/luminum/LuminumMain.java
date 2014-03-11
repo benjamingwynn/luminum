@@ -9,12 +9,14 @@ public class LuminumMain {
 		// Load our TestAI script
 		new LuminumAI().loadAIScript("testai");
 		
+		System.out.println(LuminumAI.q_usr_ans[0][0]);
+		
+		// set as 0
+		LuminumOutput.sent_message_count = 0;
+		
 		// Loop the following
 		while (true) {
-			//Print Next message
-			new LuminumAI().nextMessage();
-			//Input text
-			new LuminumInput().handleInput("generic");
+			new LuminumOutput().nextMessage();
 		}
 	}
 }

@@ -8,3 +8,6 @@ $ Work-in-progress. Insert standard disclaimer here.
 G Hello
 G Hey
 G Ahoy!
+? Question (answer yes/no)
+L yes: User answered 'yes'
+L no: User answered 'no'

@@ -1,11 +1,33 @@
 package luminum;
 
+import java.util.Random;
+
 public class LuminumOutput {
+	
+	public static int sent_message_count;
+	
+	public void nextMessage() {
+		if ( sent_message_count == 0 ) {
+			// The first message should be a greeting.
+			new LuminumAI().AIMessage("greeting");
+			new LuminumInput().handleInput("generic");
+		} else {
+			// If not the first message:
+			int x = new Random().nextInt(1) + 1; // Random 1 through 1
+			// If 1 (question)
+			if ( x == 1) {
+				// give question
+				new LuminumAI().AIMessage("question");
+				// handle answer
+				new LuminumInput().handleInput("question");
+			}
+		}
+		sent_message_count++;
+	}
 	
 	void greetUser(String ai_name, String user_name) {
 		
 		// Method setup
-		LuminumOutput output = new LuminumOutput();
 		LuminumMessageGen msggen = new LuminumMessageGen();
 		LuminumInput input = new LuminumInput();
 		
@@ -14,28 +36,27 @@ public class LuminumOutput {
 		
 		// If the user's name is undefined
 		if (user_name != "Undefined") {
-			output.friendlyOut(hello + ", " + user_name + ". I'm " + ai_name + ".");
+			LuminumOutput.friendlyOut(hello + ", " + user_name + ". I'm " + ai_name + ".");
 			input.handleInput("generic");
 		} else {
-			output.friendlyOut(hello + ". I don't seem to know your name.");
+			LuminumOutput.friendlyOut(hello + ". I don't seem to know your name.");
 			String whoareyou = msggen.randomMessage("askwho");
-			output.friendlyOut(whoareyou);
+			LuminumOutput.friendlyOut(whoareyou);
 			input.handleInput("name");
 		}
 	}
 	
 	void laughterOut() {
-		LuminumOutput output = new LuminumOutput();
 		LuminumMessageGen msggen = new LuminumMessageGen();
 		LuminumInput input = new LuminumInput();
 
 		String msg = msggen.randomMessage("laugh");
-		output.friendlyOut(msg);
+		LuminumOutput.friendlyOut(msg);
 		
 		input.handleInput("generic");
 	}
 	
-	public void friendlyOut(String output_text) {
+	public static void friendlyOut(String output_text) {
 		System.out.println(output_text);
 	}
 	
