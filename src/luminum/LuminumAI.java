@@ -49,7 +49,7 @@ public class LuminumAI {
 				
 				// If the second character isn't a space
 				if ( lines[i].indexOf(' ') != 1 && lines[i].startsWith("#") != true) { // counts from 0
-					new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No space after prefix.");
+					new LuminumInterface().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No space after prefix.");
 				}
 				
 				// If the first character is ! then
@@ -65,18 +65,18 @@ public class LuminumAI {
 						subline_count++;
 					} else {
 						// Didn't expect the sub line
-						new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". Didn't expect 'L' prefix.");
+						new LuminumInterface().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". Didn't expect 'L' prefix.");
 						subline_count = 0;
 					}
 				} else if (lines[i].startsWith("&")) {
 					// & - Meta data
 					String metatype = "ai_name";
 					if ( metatype.equals(lines[i].substring(2, (metatype.length() + 2))) ) {
-						new LuminumOutput().systemOut("New AI name set"); // TODO
+						new LuminumInterface().systemOut("New AI name set"); // TODO
 					}
 					metatype = "ai_version";
 					if ( metatype.equals(lines[i].substring(2, (metatype.length() + 2))) ) {
-						new LuminumOutput().systemOut("New AI version set"); // TODO
+						new LuminumInterface().systemOut("New AI version set"); // TODO
 					}
 				} else if (lines[i].startsWith("$")) {
 					String text = lines[i].substring(2, lines[i].length());
@@ -97,22 +97,22 @@ public class LuminumAI {
 					greeting.add(lines[i].substring(2, lines[i].length()));
 					greeting_count++;
 				} else {
-					new LuminumOutput().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No known prefix given.");
+					new LuminumInterface().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No known prefix given.");
 				}
 			}
 		} catch (IOException e) {
-			new LuminumOutput().systemOut("Cannot access AI script. Maybe it doesn't exist? (Java IOException)");
+			new LuminumInterface().systemOut("Cannot access AI script. Maybe it doesn't exist? (Java IOException)");
 		}
 	}
 
 	public void AIMessage(String type) {
-		//new LuminumOutput().systemOut("AI Message");
+		//new LuminumInterface().systemOut("AI Message");
 		
 		if (type == "greeting") {
-			LuminumOutput.friendlyOut(String.valueOf(greeting.get(new Random().nextInt(greeting_count))));
+			LuminumInterface.friendlyOut(String.valueOf(greeting.get(new Random().nextInt(greeting_count))));
 		} else if (type == "question") {
 			question_number = new Random().nextInt(question_count);
-			LuminumOutput.friendlyOut(String.valueOf(question.get(question_number)));
+			LuminumInterface.friendlyOut(String.valueOf(question.get(question_number)));
 		}
 	}
 	
