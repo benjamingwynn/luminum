@@ -25,37 +25,6 @@ public class LuminumOutput {
 		sent_message_count++;
 	}
 	
-	void greetUser(String ai_name, String user_name) {
-		
-		// Method setup
-		LuminumMessageGen msggen = new LuminumMessageGen();
-		LuminumInput input = new LuminumInput();
-		
-		// Print hello message
-		String hello = msggen.randomMessage("greeting");
-		
-		// If the user's name is undefined
-		if (user_name != "Undefined") {
-			LuminumOutput.friendlyOut(hello + ", " + user_name + ". I'm " + ai_name + ".");
-			input.handleInput("generic");
-		} else {
-			LuminumOutput.friendlyOut(hello + ". I don't seem to know your name.");
-			String whoareyou = msggen.randomMessage("askwho");
-			LuminumOutput.friendlyOut(whoareyou);
-			input.handleInput("name");
-		}
-	}
-	
-	void laughterOut() {
-		LuminumMessageGen msggen = new LuminumMessageGen();
-		LuminumInput input = new LuminumInput();
-
-		String msg = msggen.randomMessage("laugh");
-		LuminumOutput.friendlyOut(msg);
-		
-		input.handleInput("generic");
-	}
-	
 	public static void friendlyOut(String output_text) {
 		System.out.println(output_text);
 	}
