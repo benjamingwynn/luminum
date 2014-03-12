@@ -40,7 +40,6 @@ public class LuminumInterface {
 		String input = getInput();
 		
 		if ( type.equals("question") ) {
-			systemOut("question detected");
 			int i; for ( i=0; i < LuminumAI.question_count; i++ ) {
 				int l; for ( l=0; l < LuminumAI.subline_count; l++ ) {
 					System.out.println(l); //okay

@@ -11,3 +11,7 @@ G Ahoy!
 ? Question (answer yes/no)
 L yes: User answered 'yes'
 L no: User answered 'no'
+? second question
+L answer1: answer 1 given
+L answer2: answer 2 given
+G Test greeting

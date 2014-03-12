@@ -9,14 +9,14 @@ import java.util.Random;
 public class LuminumAI {
 	
 	// Add Array Lists, arrays and integers:
-	public static ArrayList question = new ArrayList();
-	public static ArrayList greeting = new ArrayList();
+	public static ArrayList<String> question = new ArrayList<String>();
+	public static ArrayList<String> greeting = new ArrayList<String>();
 	
 	public static int question_count;
 	public static int greeting_count;
 	
-	public static String[][] q_usr_ans;
-	public static String[][] q_ai_resp;
+	public static String[][] q_usr_ans = new String[999][999]; // TODO: define accurate max size for these arrays
+	public static String[][] q_ai_resp = new String[999][999];
 
 	public static int subline_count;
 	public static int question_number;
@@ -30,21 +30,21 @@ public class LuminumAI {
 			subline_count = 0;
 			question_number = 0;
 			
-			String[][] q_usr_ans = new String[999][999]; ; // TODO: define accurate max size for these arrays
-			String[][] q_ai_resp = new String[999][999];
-			
 			// Set path
 			String path = "ai/" + script + ".txt";
 			
 			// Read script
 			String[] lines = readFile(path);
 			
+			// Define array variables
+			//String[][] q_usr_ans = new String[lines.length][lines.length];
+			//String[][] q_ai_resp = new String[lines.length][lines.length];
+			
 			// Set up boolean
 			boolean expect_subline = false;
 			
 			// Do stuff with these lines
-			int i;
-			for ( i=0; i < lines.length; i++ ) {
+			int i;for ( i=0; i < lines.length; i++ ) {
 				//System.out.println( lines[i] ) ; // prints all of the lines in the file
 				
 				// If the second character isn't a space
@@ -58,10 +58,17 @@ public class LuminumAI {
 				} else if (lines[i].startsWith("L")) {
 					// L - sub line (expanded information from previous line)
 					if (expect_subline) {
+						System.out.println("expect_subline is true");
 						// Expected the sub line prefix
 						String text = lines[i].substring(2, lines[i].length());
+						System.out.println(text.substring(0,(lines[i].indexOf(':') - 2)));
+						System.out.println(question_count);
+						System.out.println(subline_count);
+						
 						q_usr_ans[question_count][subline_count] = (text.substring(0,(lines[i].indexOf(':') - 2)));
+						
 						q_ai_resp[question_count][subline_count] = text.substring(lines[i].indexOf(':'),text.length());
+						System.out.println(q_usr_ans[question_count][subline_count]); // TODO: the variable can't be accessed out of this *loop*.
 						subline_count++;
 					} else {
 						// Didn't expect the sub line
@@ -83,6 +90,7 @@ public class LuminumAI {
 					System.out.println(text);
 				} else if (lines[i].startsWith("?")) {
 					// ? - Asks the user a question, expects an answer.
+					subline_count = 0;
 					question.add(lines[i].substring(2, lines[i].length()));
 					expect_subline = true;
 					question_count++;
@@ -100,6 +108,7 @@ public class LuminumAI {
 					new LuminumInterface().systemOut("Syntax error in AI Script " + script + " on line #" + (i+1) + ". No known prefix given.");
 				}
 			}
+			System.out.println(q_usr_ans[0][0]);
 		} catch (IOException e) {
 			new LuminumInterface().systemOut("Cannot access AI script. Maybe it doesn't exist? (Java IOException)");
 		}

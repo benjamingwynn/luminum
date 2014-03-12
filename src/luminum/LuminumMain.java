@@ -9,9 +9,7 @@ public class LuminumMain {
 		// Load our TestAI script
 		new LuminumAI().loadAIScript("testai");
 		
-		System.out.println(LuminumAI.q_usr_ans[0][0]);
-		
-		// set as 0
+		// Set as 0
 		LuminumInterface.sent_message_count = 0;
 		
 		// Loop the following
